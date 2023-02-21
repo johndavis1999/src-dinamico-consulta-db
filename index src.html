@@ -1,0 +1,41 @@
+<?php
+// establecemos la conexión a la base de datos
+$conexion = mysqli_connect("localhost", "usuario", "contraseña", "basededatos");
+mysqli_select_db($conexion, "basededatos");
+
+// hacemos la consulta para obtener los registros de la tabla "portada"
+$consulta = mysqli_query($conexion, "SELECT id, img FROM portada");
+
+// generamos el HTML para mostrar las imágenes en el contenedor
+echo '<div id="contenedor">';
+while ($fila = mysqli_fetch_array($consulta)) {
+  echo '<img src="' . $fila["img"] . '" id="' . $fila["id"] . '" style="display: none;">';
+}
+echo '</div>';
+?>
+
+<script>
+// definimos las imágenes y el tiempo de espera
+const imagenes = document.querySelectorAll("#contenedor img");
+const tiempoEspera = 5000; // 5 segundos
+let indiceImagen = 0;
+
+// inicialmente mostramos la primera imagen y ocultamos las demás
+imagenes[indiceImagen].style.display = "block";
+for (let i = 1; i < imagenes.length; i++) {
+  imagenes[i].style.display = "none";
+}
+
+// función para cambiar la imagen visible
+function cambiarImagen() {
+  imagenes[indiceImagen].style.display = "none";
+  indiceImagen++;
+  if (indiceImagen >= imagenes.length) {
+    indiceImagen = 0;
+  }
+  imagenes[indiceImagen].style.display = "block";
+}
+
+// esperamos el tiempo definido y luego cambiamos la imagen
+setInterval(cambiarImagen, tiempoEspera);
+</script>
